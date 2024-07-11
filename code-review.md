@@ -68,11 +68,12 @@ Mi propuesta sería la siguiente:
 ### api 
 En esta capa me gustaría comentar algunas cosas:
 
-    - Uso de @Data: En las clases #AdVO y #PictureVO se podría usar @Data de Lombok para ahorrar líneas de código en getters y setters.
+- Uso de @Data: En las clases #AdVO y #PictureVO se podría usar @Data de Lombok para ahorrar líneas de código en getters y setters.
 
-    - AdsController: Añadir anotaciones de Swagger para que los usuarios sepan qué tipo de datos deben utilizar.
+- AdsController: Añadir anotaciones de Swagger para que los usuarios sepan qué tipo de datos deben utilizar.
 
-    - La clase #QualityAd está utilizando para el parámetro irrelevantSince un tipo Date, y este tipo de dato no esta mal, pero era mas utilizado en versiones anteriores. A partir de Java 8, se utiliza mejor el tipo LocalDate de la biblioteca de "java.time" siendo así mas robusta y menos propensa a errores. 
+- La clase #QualityAd está utilizando para el parámetro irrelevantSince un tipo Date, y este tipo de dato no esta mal, pero era mas utilizado en versiones anteriores. 
+A partir de Java 8, se utiliza mejor el tipo LocalDate de la biblioteca de "java.time" siendo así mas robusta y menos propensa a errores. 
 
     - En #Ad y #Picture podría ser recomendable, en función de las casuísticas especificas, añadir a todos los campos "final", si no se esperan cambios una vez establecidos. Los objetos inmutables pueden ser mas eficientes en términos de memoria. Siguiendo la misma linea y teniendo en cuenta que esto seria solo en algunas casuísticas, todos los campos que sean Integer, si son sustituidos por "int" en algunas ocasiones puede reducir el consumo de memoria. Si se aplicara este cambio, no se podría utilizar colecciones tipo List<Integer> ni utilizar métodos adicionales como toString(), compareTo(), etc
 
