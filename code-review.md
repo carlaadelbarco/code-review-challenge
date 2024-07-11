@@ -57,7 +57,7 @@ com.idealista
     │   └── config
     │       (Aquí irían posibles clases de configuración necesarias, como la conexión con BBDD por ejemplo)
     └── Main.java
-
+```
 
 
 Se han reorganizado diversas clases para ajustarse mejor a una arquitectura hexagonal.
