@@ -63,9 +63,11 @@ com.idealista
 Se han reorganizado diversas clases para ajustarse mejor a una arquitectura hexagonal.
 Mi propuesta sería la siguiente:
 
-## Capa de Infraestructura:
+## Capa de Infraestructura
 
-### API
+### api 
+En esta capa me gustaría comentar algunas cosas:
+
     - Uso de @Data: En las clases #AdVO y #PictureVO se podría usar @Data de Lombok para ahorrar líneas de código en getters y setters.
 
     - AdsController: Añadir anotaciones de Swagger para que los usuarios sepan qué tipo de datos deben utilizar.
@@ -75,6 +77,7 @@ Mi propuesta sería la siguiente:
     - En #Ad y #Picture podría ser recomendable, en función de las casuísticas especificas, añadir a todos los campos "final", si no se esperan cambios una vez establecidos. Los objetos inmutables pueden ser mas eficientes en términos de memoria. Siguiendo la misma linea y teniendo en cuenta que esto seria solo en algunas casuísticas, todos los campos que sean Integer, si son sustituidos por "int" en algunas ocasiones puede reducir el consumo de memoria. Si se aplicara este cambio, no se podría utilizar colecciones tipo List<Integer> ni utilizar métodos adicionales como toString(), compareTo(), etc
 
 ### persistence
+
 Personalmente esta capa la dividiria en dos: 
     - persistency: para implementar los repositorios de JPA de nuestra aplicación, este sera el punto de acceso de nuestra bbdd. En esta carpeta lo correcto seria poner #InMemoryPersistence. Las clases de repositorios jpas deben ir en las capas mas externas de una arquitectura hexagonal, para asegurar que cumplimos con los patrones solid. Asi de esta manera, se puede cambiar el tipo de bbdd que utilizamos sin que afecte a los demás componentes.
     - entities: aquí irían las clases PictureVo y AdVo, para que ambas estuvieran correctamente separadas y de esta manera se hace un código mas mantenible en el futuro
@@ -86,7 +89,8 @@ En esta capa se encuentra la implementación de los casos de uso
     - La clase AdsServiceImpl contiene en su código lógica de mappeo de datos que debería estar en una clase independiente que se dedique únicamente a mappear los datos. De esta manera cumplimos el principio SOLID de responsabilidad única. Este mappeo seria mejor implementarlo en la capa de infraestructura, en una carpeta especifica para los mappers.
 
 ## Capa de Domain:
-    - Aqui he optado por implementar los puertos (inputs y outputs) y los models.
+
+Aqui he optado por implementar los puertos (inputs y outputs) y los models.
 
 
 # Buenas Prácticas, Principios SOLID y Clean Code
