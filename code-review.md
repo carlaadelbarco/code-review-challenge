@@ -63,9 +63,9 @@ com.idealista
 Se han reorganizado diversas clases para ajustarse mejor a una arquitectura hexagonal.
 Mi propuesta sería la siguiente:
 
-##Capa de Infraestructura:
+## Capa de Infraestructura:
 
-###API
+### API
     - Uso de @Data: En las clases #AdVO y #PictureVO se podría usar @Data de Lombok para ahorrar líneas de código en getters y setters.
 
     - AdsController: Añadir anotaciones de Swagger para que los usuarios sepan qué tipo de datos deben utilizar.
@@ -74,22 +74,22 @@ Mi propuesta sería la siguiente:
 
     - En #Ad y #Picture podría ser recomendable, en función de las casuísticas especificas, añadir a todos los campos "final", si no se esperan cambios una vez establecidos. Los objetos inmutables pueden ser mas eficientes en términos de memoria. Siguiendo la misma linea y teniendo en cuenta que esto seria solo en algunas casuísticas, todos los campos que sean Integer, si son sustituidos por "int" en algunas ocasiones puede reducir el consumo de memoria. Si se aplicara este cambio, no se podría utilizar colecciones tipo List<Integer> ni utilizar métodos adicionales como toString(), compareTo(), etc
 
-###persistence
+### persistence
 Personalmente esta capa la dividiria en dos: 
     - persistency: para implementar los repositorios de JPA de nuestra aplicación, este sera el punto de acceso de nuestra bbdd. En esta carpeta lo correcto seria poner #InMemoryPersistence. Las clases de repositorios jpas deben ir en las capas mas externas de una arquitectura hexagonal, para asegurar que cumplimos con los patrones solid. Asi de esta manera, se puede cambiar el tipo de bbdd que utilizamos sin que afecte a los demás componentes.
     - entities: aquí irían las clases PictureVo y AdVo, para que ambas estuvieran correctamente separadas y de esta manera se hace un código mas mantenible en el futuro
 
 
-##Capa de Aplicación
+## Capa de Aplicación
 
 En esta capa se encuentra la implementación de los casos de uso
     - La clase AdsServiceImpl contiene en su código lógica de mappeo de datos que debería estar en una clase independiente que se dedique únicamente a mappear los datos. De esta manera cumplimos el principio SOLID de responsabilidad única. Este mappeo seria mejor implementarlo en la capa de infraestructura, en una carpeta especifica para los mappers.
 
-##Capa de Domain:
+## Capa de Domain:
     - Aqui he optado por implementar los puertos (inputs y outputs) y los models.
 
 
-#Buenas Prácticas, Principios SOLID y Clean Code
+# Buenas Prácticas, Principios SOLID y Clean Code
 
 - En la clase #inMemoryPersistence se podrían sustituir los parámetros List<AdVO> ads y List<PictureVO> pictures por Map<Integer, AdVO> y Map<Integer, PictureVO>, ya que los mapas proporcionan una búsqueda, inserción y eliminación más eficientes en comparación con las listas. Además, si las casuísticas del proyecto lo permiten y fueran inmutables, haría estas variables “final”, mejorando la seguridad del código y mejorando la eficiencia en términos de memoria. 
 
@@ -101,7 +101,7 @@ En esta capa se encuentra la implementación de los casos de uso
 
 - Echo en falta la utilización de anotaciones de Lombok, para facilitar la lectura/escritura de nuestro código. Ademas de lo comentado anteriormente en el punto YYYYY(cambiar), se podría utilizar @Data en clases como #AdVO o #PictureVO.
 
-#Swagger API:
+# Swagger API:
 - No hay fichero swagger.yaml para la integración de terceros. A partir de este fichero, cualquier tercero que lo importe en su proyecto y utilizando API First, podría generar los dtos necesarios.
 - No hay uso de swagger para poder hacer uso de OpenAPI para la visualización del endpoint. Esto se haría de una manera muy sencilla
 
@@ -110,7 +110,7 @@ Recomiendo en este caso, la dependencia de OpenAPI o Swagger para la generacion 
 Tambien podemos incluir la dependencia de "Springfox" para generar la interfaz web para que terceros puedan integrarse de manera sencilla con estos enpoints.
 
 
-#Errores
+# Errores
 Manejo de errores:
     - No hay manejo de errores y excepciones. De hecho, probando el servicio, cuando se produce algún error, siempre devuelve un error 500. 
     Seria mas recomendable utilizar una clase genérica de manejo de errores o excepciones, de tal manera, que estuvieran categorizados cada uno de los errores que pudieran darse. Errores 500, 400, etc. 
@@ -118,7 +118,7 @@ Manejo de errores:
 
     Esta clase se podria añadir en la capa de infrastructure - handler
 
-#Performance:
+# Performance:
 
 - En cuanto al almacenamiento y persistencia en memoria, he podido observar que esta almacenando los datos en tiempo de ejecución, ya que no existe ninguna BBDD ni ningún tipo de almacenamiento en general. Podríamos utilizar una bbdd como postgres por su robustez y alta disponibilidad para almacenar todos los datos que necesitemos. También podríamos utilizar una bbdd no relacional como MongoDB o incluso un elasticSearch si en un futuro se quieren incorporar mecanismos de búsqueda y predicción de la búsqueda mas avanzados, ya que para este tipo de buscadores, elasticsearch es una gran opción.
 De esta manera, la clase "InMemoryPersistence" podría ser modificada para que recuperara sus datos en la bbdd que elijamos, y no tendría que estar haciendo las consultas en memoria consumiendo muchos mas recursos de los necesarios.
@@ -129,7 +129,7 @@ De esta manera, la clase "InMemoryPersistence" podría ser modificada para que r
 
 - Aunque no es el motivo de esta code review, de cara a un posible despliegue, se podrían incluir balanceadores de carga para no sobrecargar un único servidor
 
-#Testing
+# Testing
 
 - Puedo observar que existe un test unitario para cubrir una funcionalidad, pero esto provoca una baja cobertura. Existen muy pocos test unitarios, por lo que yo realizaría test unitarios con JUnit y Mockito para cubrir cada uno de los casos de uso que existen en la aplicación. 
 Además, se podria añadir la dependencia mvn en el pom de jacoco, para que cada vez que se ejecute mvn test genere un archivo de cobertura de los test de la aplicacion y podamos tener una vision general.
@@ -146,11 +146,11 @@ Además, se podria añadir la dependencia mvn en el pom de jacoco, para que cada
 
 Todas estas pruebas se pueden incluir en una pipeline de integración continua para automatizar las pruebas, usando un servidor de CI/CD (Jenkins, Azure…)
 
-#Integracion continua y despliegue continuo - CI/CD
+# Integracion continua y despliegue continuo - CI/CD
 Echo en falta algún archivo por ejemplo docker-compose.yaml para hacer mas sencillo el despliegue y arranque en nuestro local. Se podría incorporar un docker para que cuando levantáramos la aplicación nos desplegara una bbdd por ejemplo.
 Además de, como hemos comentado en el punto anterior, seria interesante incluir un paquete de pruebas integrado en CI/CD para que se ejecuten los test antes de hacer un despliegue, de tal manera, que si no supera los test o cierta cobertura que configuremos, no sea posible realizar el despliegue.
 
-#Configuracion de entornos
+# Configuracion de entornos
 En este punto, quiero comentar por encima, que es una buena practica tener ficheros de configuracion separados por entornos, en los que cada uno de los ficheros hace referencia a la configuración especifica del entorno en el que se encuentra.
 
 
